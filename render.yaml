@@ -1,0 +1,9 @@
+# Aegis Render Blueprint
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: aegis
+    runtime: static
+    buildCommand: "true"
+    staticPublishPath: .
+    autoDeployTrigger: commit
