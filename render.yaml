@@ -1,9 +1,15 @@
-# Aegis Render Blueprint
-# https://render.com/docs/blueprint-spec
+# One-click deploy config for Render (https://render.com) — free tier.
+# Push this folder to GitHub, then on Render: New → Blueprint → pick your repo.
+# Render reads this file and provisions the server automatically.
 services:
   - type: web
     name: aegis
-    runtime: static
-    buildCommand: "true"
-    staticPublishPath: .
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /health
     autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
