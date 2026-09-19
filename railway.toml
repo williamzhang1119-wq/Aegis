@@ -1,2 +1,0 @@
-# Prefer deploying with Railway Root Directory = apps/venture-1
-# (uses apps/venture-1/railway.toml + apps/venture-1/Dockerfile).
