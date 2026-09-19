@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { chatWithOpenAI, demoReply, isDemoMode, type ChatTurn } from "@/lib/openai";
-import { REFUSAL_MESSAGE } from "@/lib/prompts";
+import { generateReply, type ChatTurn } from "@/lib/openai";
+import { REFUSAL_MESSAGE, VENTURE_SYSTEM_PROMPT } from "@/lib/prompts";
 import { moderateWithOpenAI, redactPii, sanitizeUserMessage } from "@/lib/safety";
 
 export const runtime = "nodejs";
@@ -8,6 +8,10 @@ export const runtime = "nodejs";
 type Body = {
   message?: string;
   history?: ChatTurn[];
+  messages?: ChatTurn[];
+  system?: string;
+  model?: string;
+  max_tokens?: number;
 };
 
 const rateBuckets = new Map<string, { count: number; resetAt: number }>();
@@ -23,7 +27,7 @@ function clientKey(req: Request): string {
 function allowRequest(key: string): boolean {
   const now = Date.now();
   const windowMs = 60_000;
-  const limit = 20;
+  const limit = 30;
   const bucket = rateBuckets.get(key);
   if (!bucket || now > bucket.resetAt) {
     rateBuckets.set(key, { count: 1, resetAt: now + windowMs });
@@ -32,6 +36,13 @@ function allowRequest(key: string): boolean {
   if (bucket.count >= limit) return false;
   bucket.count += 1;
   return true;
+}
+
+function anthropicShape(text: string, extra: Record<string, unknown> = {}) {
+  return {
+    content: [{ type: "text", text }],
+    ...extra,
+  };
 }
 
 export async function POST(req: Request) {
@@ -49,58 +60,106 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const sanitized = sanitizeUserMessage(body.message ?? "");
-  if (!sanitized.ok) {
-    if (sanitized.reason === "blocked") {
-      return NextResponse.json({ reply: REFUSAL_MESSAGE, refused: true });
+  const system =
+    typeof body.system === "string" && body.system.trim()
+      ? body.system.slice(0, 12000)
+      : VENTURE_SYSTEM_PROMPT;
+
+  let messages: ChatTurn[] = [];
+  if (Array.isArray(body.messages) && body.messages.length) {
+    messages = body.messages
+      .filter(
+        (m): m is ChatTurn =>
+          !!m &&
+          (m.role === "user" || m.role === "assistant") &&
+          typeof m.content === "string",
+      )
+      .slice(-16)
+      .map((m) => ({
+        role: m.role,
+        content: redactPii(m.content).slice(0, 2000),
+      }));
+  } else {
+    const sanitized = sanitizeUserMessage(body.message ?? "");
+    if (!sanitized.ok) {
+      if (sanitized.reason === "blocked") {
+        return NextResponse.json(
+          anthropicShape(REFUSAL_MESSAGE, { refused: true, reply: REFUSAL_MESSAGE }),
+        );
+      }
+      if (sanitized.reason === "too_long") {
+        return NextResponse.json(
+          { error: "That message is a bit long. Try a shorter question!" },
+          { status: 400 },
+        );
+      }
+      return NextResponse.json({ error: "Please type a message." }, { status: 400 });
     }
-    if (sanitized.reason === "too_long") {
-      return NextResponse.json(
-        { error: "That message is a bit long. Try a shorter question!" },
-        { status: 400 },
-      );
-    }
+    const history = Array.isArray(body.history)
+      ? body.history
+          .filter(
+            (m): m is ChatTurn =>
+              !!m &&
+              (m.role === "user" || m.role === "assistant") &&
+              typeof m.content === "string",
+          )
+          .slice(-8)
+          .map((m) => ({
+            role: m.role,
+            content: redactPii(m.content).slice(0, 800),
+          }))
+      : [];
+    messages = [...history, { role: "user", content: redactPii(sanitized.text) }];
+  }
+
+  if (!messages.length) {
     return NextResponse.json({ error: "Please type a message." }, { status: 400 });
   }
 
-  const userText = redactPii(sanitized.text);
-  const history = Array.isArray(body.history)
-    ? body.history
-        .filter(
-          (m): m is ChatTurn =>
-            !!m &&
-            (m.role === "user" || m.role === "assistant") &&
-            typeof m.content === "string",
-        )
-        .slice(-8)
-        .map((m) => ({ role: m.role, content: redactPii(m.content).slice(0, 800) }))
-    : [];
-
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (isDemoMode(apiKey)) {
-    return NextResponse.json({
-      reply: demoReply(userText),
-      demo: true,
-    });
+  const lastUser = [...messages].reverse().find((m) => m.role === "user");
+  if (lastUser) {
+    const check = sanitizeUserMessage(lastUser.content.slice(0, 800));
+    if (!check.ok && check.reason === "blocked") {
+      return NextResponse.json(
+        anthropicShape(REFUSAL_MESSAGE, { refused: true, reply: REFUSAL_MESSAGE }),
+      );
+    }
   }
 
-  const moderation = await moderateWithOpenAI(userText, apiKey!);
-  if (moderation.flagged) {
-    return NextResponse.json({ reply: REFUSAL_MESSAGE, refused: true });
+  const openaiKey = process.env.OPENAI_API_KEY;
+  if (openaiKey && lastUser) {
+    const moderation = await moderateWithOpenAI(lastUser.content, openaiKey);
+    if (moderation.flagged) {
+      return NextResponse.json(
+        anthropicShape(REFUSAL_MESSAGE, { refused: true, reply: REFUSAL_MESSAGE }),
+      );
+    }
   }
 
   try {
-    const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
-    const reply = await chatWithOpenAI({
-      apiKey: apiKey!,
-      model,
-      messages: [...history, { role: "user", content: userText }],
+    const result = await generateReply({
+      system,
+      messages,
+      maxTokens: typeof body.max_tokens === "number" ? body.max_tokens : 1200,
+      model: typeof body.model === "string" ? body.model : undefined,
     });
-    const outMod = await moderateWithOpenAI(reply, apiKey!);
-    if (outMod.flagged) {
-      return NextResponse.json({ reply: REFUSAL_MESSAGE, refused: true });
+
+    if (openaiKey && !result.demo) {
+      const outMod = await moderateWithOpenAI(result.text, openaiKey);
+      if (outMod.flagged) {
+        return NextResponse.json(
+          anthropicShape(REFUSAL_MESSAGE, { refused: true, reply: REFUSAL_MESSAGE }),
+        );
+      }
     }
-    return NextResponse.json({ reply: redactPii(reply), demo: false });
+
+    return NextResponse.json(
+      anthropicShape(result.text, {
+        reply: result.text,
+        demo: result.demo,
+        provider: result.provider,
+      }),
+    );
   } catch (err) {
     const message = err instanceof Error ? err.message : "Chat failed";
     return NextResponse.json(
