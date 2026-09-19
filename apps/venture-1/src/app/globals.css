@@ -12,7 +12,7 @@
   --leaf: #6abf69;
   --cream: #f7fff8;
   --bubble-user: #fff7d6;
-  --bubble-pip: #ffffff;
+  --bubble-tutor: #ffffff;
   --danger: #b33a3a;
   --shadow: 0 18px 40px rgba(20, 60, 55, 0.12);
   --font-display: "Fredoka", system-ui, sans-serif;
@@ -233,7 +233,7 @@ body {
 .brand {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(3.4rem, 12vw, 6.5rem);
+  font-size: clamp(2.6rem, 9vw, 5.2rem);
   line-height: 0.95;
   letter-spacing: -0.03em;
   color: var(--teal-deep);
@@ -390,7 +390,7 @@ body {
 
 .bubble.assistant {
   align-self: flex-start;
-  background: var(--bubble-pip);
+  background: var(--bubble-tutor);
   border: 1px solid rgba(31, 122, 108, 0.1);
 }
 

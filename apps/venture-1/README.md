@@ -1,6 +1,6 @@
-# Pip — kid-safe AI tutor
+# Venture 1 — kid-safe AI tutor
 
-Pip is a Socratic tutor for children: it guides with hints and questions so kids learn how to think. It does **not** give homework answers or solutions directly.
+Venture 1 is a Socratic tutor for children: it guides with hints and questions so kids learn how to think. It does **not** give homework answers or solutions directly.
 
 ## Features
 
@@ -14,7 +14,7 @@ Pip is a Socratic tutor for children: it guides with hints and questions so kids
 ## Local development
 
 ```bash
-cd apps/pip
+cd apps/venture-1
 cp .env.example .env.local
 # Optional: add OPENAI_API_KEY for live replies
 npm install
@@ -27,7 +27,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 1. Push this repo to GitHub.
 2. In [Railway](https://railway.app), **New Project → Deploy from GitHub**.
-3. Set the service **Root Directory** to `apps/pip`.
+3. Set the service **Root Directory** to `apps/venture-1`.
 4. Railway will build using the included `Dockerfile`.
 5. Add variables:
    - `OPENAI_API_KEY` — your OpenAI key (omit for demo mode)
@@ -38,7 +38,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ### CLI alternative
 
 ```bash
-cd apps/pip
+cd apps/venture-1
 npm i -g @railway/cli
 railway login
 railway init
@@ -49,9 +49,9 @@ railway domain
 
 ## Safety notes
 
-- Pip refuses adult, violent, and self-harm topics.
-- Pip never asks for personal details (address, phone, school, etc.).
-- Pip tutors with hints — it does not give final answers or completed homework.
+- Venture 1 refuses adult, violent, and self-harm topics.
+- Venture 1 never asks for personal details (address, phone, school, etc.).
+- Venture 1 tutors with hints — it does not give final answers or completed homework.
 - Parents should supervise younger children online.
 - Demo mode uses canned tutoring replies and does not call a model.
 
