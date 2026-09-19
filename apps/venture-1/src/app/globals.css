@@ -581,6 +581,200 @@ body {
   text-decoration: underline;
 }
 
+/* ---------- Advanced toolbar ---------- */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  align-items: center;
+}
+
+.age-select,
+.topic-select {
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 12px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2.5px solid var(--ink);
+  border-radius: 14px;
+  padding: 8px 10px;
+  box-shadow: 0 2px 0 var(--ink);
+}
+
+.tool-btn {
+  background: var(--paper);
+  border: 2.5px solid var(--ink);
+  border-radius: 14px;
+  padding: 8px 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 2px 0 var(--ink);
+}
+
+.tool-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 var(--ink);
+}
+
+.tool-btn.primary {
+  background: var(--sun);
+}
+
+.stats-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.stat-chip {
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+
+.stat-chip strong {
+  color: var(--ink);
+}
+
+.hint-ladder {
+  margin-top: 10px;
+  background: var(--paper);
+  border: 2.5px solid var(--ink);
+  border-radius: 16px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow);
+}
+
+.hint-ladder-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.hint-ladder-top span {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.hint-steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.hint-step {
+  height: 10px;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+  background: var(--sky-deep);
+}
+
+.hint-step.on {
+  background: linear-gradient(90deg, var(--sun), var(--coral));
+}
+
+.daily-card,
+.adventure-card {
+  margin-top: 10px;
+  background: var(--paper);
+  border: 2.5px dashed var(--sun-deep);
+  border-radius: 18px;
+  padding: 12px 14px;
+}
+
+.daily-card h3,
+.adventure-card h3 {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 15px;
+}
+
+.daily-card p,
+.adventure-card p {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(46, 42, 34, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+}
+
+.modal {
+  width: min(420px, 100%);
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.modal h2 {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 22px;
+}
+
+.modal p,
+.modal li {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+.modal ul {
+  margin: 8px 0 14px;
+  padding-left: 18px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.xp-wrap {
+  margin-left: auto;
+  text-align: center;
+  flex-shrink: 0;
+  min-width: 78px;
+}
+
+.xp-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
