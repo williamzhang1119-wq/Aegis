@@ -104,7 +104,7 @@ export async function POST(req: Request) {
   } catch (err) {
     const message = err instanceof Error ? err.message : "Chat failed";
     return NextResponse.json(
-      { error: `Pip got a little tangled: ${message}` },
+      { error: `Venture 1 got a little tangled: ${message}` },
       { status: 502 },
     );
   }

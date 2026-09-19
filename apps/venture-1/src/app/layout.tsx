@@ -15,13 +15,13 @@ const body = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Pip — a kid-safe AI tutor",
+  title: "Venture 1 — a kid-safe AI tutor",
   description:
-    "Pip is a Socratic AI tutor for kids: hints and questions that guide learning without giving answers away.",
+    "Venture 1 is a Socratic AI tutor for kids: hints and questions that guide learning without giving answers away.",
   openGraph: {
-    title: "Pip — a kid-safe AI tutor",
+    title: "Venture 1 — a kid-safe AI tutor",
     description:
-      "Homework help that teaches thinking — Pip guides with hints, never spoils the answer.",
+      "Homework help that teaches thinking — Venture 1 guides with hints, never spoils the answer.",
     type: "website",
   },
 };

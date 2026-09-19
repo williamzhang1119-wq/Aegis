@@ -22,7 +22,7 @@ export function ChatPanel() {
       id: "welcome",
       role: "assistant",
       content:
-        "Hi, I'm Pip — your tutor! I help you think it through (I won't spoil the answer). What are you learning today?",
+        "Hi, I'm Venture 1 — your tutor! I help you think it through (I won't spoil the answer). What are you learning today?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -68,7 +68,7 @@ export function ChatPanel() {
         { id: uid(), role: "assistant", content: data.reply || "..." },
       ]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not reach Pip");
+      setError(err instanceof Error ? err.message : "Could not reach Venture 1");
     } finally {
       setBusy(false);
     }
@@ -80,10 +80,10 @@ export function ChatPanel() {
   }
 
   return (
-    <section id="chat" className="chat-shell" aria-label="Chat with Pip">
+    <section id="chat" className="chat-shell" aria-label="Chat with Venture 1">
       <div className="chat-top">
         <div>
-          <h2 className="chat-title">Learn with Pip</h2>
+          <h2 className="chat-title">Learn with Venture 1</h2>
           <p className="chat-sub">Hints & questions · never spoils the answer</p>
         </div>
         {demo ? <span className="demo-pill">Demo mode</span> : null}
@@ -106,13 +106,13 @@ export function ChatPanel() {
       <div className="messages" ref={listRef} role="log" aria-live="polite">
         {messages.map((m) => (
           <div key={m.id} className={`bubble ${m.role}`}>
-            <span className="who">{m.role === "assistant" ? "Pip" : "You"}</span>
+            <span className="who">{m.role === "assistant" ? "Venture 1" : "You"}</span>
             <p>{m.content}</p>
           </div>
         ))}
         {busy ? (
           <div className="bubble assistant thinking">
-            <span className="who">Pip</span>
+            <span className="who">Venture 1</span>
             <p>
               Thinking
               <span className="dots" aria-hidden>
@@ -128,14 +128,14 @@ export function ChatPanel() {
       {error ? <p className="chat-error">{error}</p> : null}
 
       <form className="composer" onSubmit={onSubmit}>
-        <label className="sr-only" htmlFor="pip-input">
-          Message Pip
+        <label className="sr-only" htmlFor="venture-input">
+          Message Venture 1
         </label>
         <input
-          id="pip-input"
+          id="venture-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="What are you stuck on? Pip will guide you..."
+          placeholder="What are you stuck on? Venture 1 will guide you..."
           maxLength={800}
           disabled={busy}
           autoComplete="off"

@@ -1,4 +1,4 @@
-import { PIP_SYSTEM_PROMPT } from "./prompts";
+import { VENTURE_SYSTEM_PROMPT } from "./prompts";
 
 export type ChatTurn = { role: "user" | "assistant"; content: string };
 
@@ -8,7 +8,7 @@ type OpenAIChatResponse = {
 };
 
 const DEMO_REPLIES = [
-  "I'm Pip, your tutor! I won't spoil the answer — I'll help you find it. What are you working on?",
+  "I'm Venture 1, your tutor! I won't spoil the answer — I'll help you find it. What are you working on?",
   "Nice question! Before we dig in: what do you already think might be true? Tell me your best guess.",
   "Let's take one tiny step. What part of the problem feels trickiest right now?",
   "Here's a hint-shaped question: what clue words jump out at you? Then we'll try the next step together.",
@@ -72,7 +72,7 @@ export async function chatWithOpenAI(options: {
       model,
       temperature: 0.6,
       max_tokens: 450,
-      messages: [{ role: "system", content: PIP_SYSTEM_PROMPT }, ...messages],
+      messages: [{ role: "system", content: VENTURE_SYSTEM_PROMPT }, ...messages],
     }),
   });
 
