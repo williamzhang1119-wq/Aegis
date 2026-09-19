@@ -1,0 +1,5 @@
+# Prefer deploying with Railway Root Directory = apps/pip
+# (uses apps/pip/railway.toml + apps/pip/Dockerfile).
+#
+# If you deploy from the repo root instead, use this config and keep
+# the Dockerfile build context as apps/pip via Railway settings.
