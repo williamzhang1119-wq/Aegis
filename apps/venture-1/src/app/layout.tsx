@@ -1,11 +1,11 @@
-import { Fredoka, Nunito } from "next/font/google";
+import { Baloo_2, Nunito } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
 
-const display = Fredoka({
+const display = Baloo_2({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
 });
 
 const body = Nunito({
@@ -15,15 +15,8 @@ const body = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Venture 1 — a kid-safe AI tutor",
-  description:
-    "Venture 1 is a Socratic AI tutor for kids: hints and questions that guide learning without giving answers away.",
-  openGraph: {
-    title: "Venture 1 — a kid-safe AI tutor",
-    description:
-      "Homework help that teaches thinking — Venture 1 guides with hints, never spoils the answer.",
-    type: "website",
-  },
+  title: "Venture 1",
+  description: "Every question is an adventure — a kid-safe tutor that guides with hints.",
 };
 
 export default function RootLayout({
@@ -33,9 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${display.variable} ${body.variable} antialiased`}>
-        {children}
-      </body>
+      <body className={`${display.variable} ${body.variable} antialiased`}>{children}</body>
     </html>
   );
 }

@@ -1,65 +1,36 @@
 # Venture 1 — kid-safe AI tutor
 
-Venture 1 is a Socratic tutor for children: it guides with hints and questions so kids learn how to think. It does **not** give homework answers or solutions directly.
+Every question is an adventure. Venture 1 guides kids with hints and questions — it does not hand over answers right away.
 
-## Features
-
-- Tutor-first chat: hints, tiny steps, and follow-up questions
-- Never spoils the final answer (even when asked “just tell me”)
-- Age-appropriate system prompt (ages 5–12)
-- Local blocked-topic checks + PII redaction
-- OpenAI moderation on input and output when an API key is set
-- Demo mode (no API key) so you can preview the tutoring UI anytime
+Matches the experience at [venture1.up.railway.app](https://venture1.up.railway.app): compass mascot, explorer meter, passport stamps, Quiz Me, voice input/read-aloud, and Socratic tutoring.
 
 ## Local development
 
 ```bash
 cd apps/venture-1
 cp .env.example .env.local
-# Optional: add OPENAI_API_KEY for live replies
+# Optional: ANTHROPIC_API_KEY (preferred) or OPENAI_API_KEY
 npm install
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
+Without an API key, demo mode still works for chat + quizzes.
+
 ## Deploy on Railway
 
-1. Push this repo to GitHub.
-2. In [Railway](https://railway.app), **New Project → Deploy from GitHub**.
-3. Set the service **Root Directory** to `apps/venture-1`.
-4. Railway will build using the included `Dockerfile`.
-5. Add variables:
-   - `OPENAI_API_KEY` — your OpenAI key (omit for demo mode)
-   - `OPENAI_MODEL` — optional, defaults to `gpt-4o-mini`
-6. Generate a public domain under **Settings → Networking → Public Networking**.
-7. Confirm `GET /api/health` returns `{ "ok": true }`.
+1. Root Directory: `apps/venture-1`
+2. Variables:
+   - `ANTHROPIC_API_KEY` (preferred, Claude)
+   - or `OPENAI_API_KEY`
+3. Public networking → open the generated URL
 
-### CLI alternative
+## Features
 
-```bash
-cd apps/venture-1
-npm i -g @railway/cli
-railway login
-railway init
-railway variables set OPENAI_API_KEY=sk-...
-railway up
-railway domain
-```
-
-## Safety notes
-
-- Venture 1 refuses adult, violent, and self-harm topics.
-- Venture 1 never asks for personal details (address, phone, school, etc.).
-- Venture 1 tutors with hints — it does not give final answers or completed homework.
-- Parents should supervise younger children online.
-- Demo mode uses canned tutoring replies and does not call a model.
-
-## Scripts
-
-| Command        | Description              |
-| -------------- | ------------------------ |
-| `npm run dev`  | Local development server |
-| `npm run build`| Production build         |
-| `npm start`    | Start production server  |
-| `npm run lint` | Lint                     |
+- Socratic tutor prompt (ages 5–18)
+- Passport topic badges
+- Curiosity / explorer meter
+- Quiz Me
+- Mic input + read-aloud (browser support)
+- Safety filters + optional OpenAI moderation
